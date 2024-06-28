@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import './Register.css'; // Import CSS file
 
 const Register = () => {
   const [fullName, setFullName] = useState('');
@@ -12,13 +8,12 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [membershipOption, setMembershipOption] = useState('');
   const [membershipPrice, setMembershipPrice] = useState(0);
-  const [openDialog, setOpenDialog] = useState(false); // State for dialog
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleMembershipChange = (e) => {
     const option = e.target.value;
     setMembershipOption(option);
 
-    // Set price based on selected option
     switch (option) {
       case 'Option 1':
         setMembershipPrice(1000);
@@ -39,7 +34,7 @@ const Register = () => {
     e.preventDefault();
     try {
       console.log('Submitting registration...');
-      await addDoc(collection(db, 'members'), {
+      const response = await axios.post('https://fitness-time-in-time-out-tracker-server.vercel.app//register', {
         fullName,
         email,
         address,
@@ -47,24 +42,11 @@ const Register = () => {
         membershipOption,
         membershipPrice,
       });
-  
-      console.log('Data added to Firestore.');
-  
-      console.log('Sending registration data to server...');
-      const response = await axios.post('https://fitness-time-in-time-out-tracker-server.vercel.app/register', {
-        fullName,
-        email,
-        address,
-        phoneNumber,
-        membershipOption,
-        membershipPrice,
-      });
-  
+
       console.log('Registration request sent. Response:', response.data);
-  
-      setOpenDialog(true); // Open dialog on successful registration
-  
-      // Clear form inputs after submission
+
+      setOpenDialog(true);
+
       setFullName('');
       setEmail('');
       setAddress('');
@@ -73,20 +55,12 @@ const Register = () => {
       setMembershipPrice(0);
     } catch (error) {
       console.error('Error registering user:', error);
-      // Check if error response is from your server and log it
-      if (error.response) {
-        console.error('Server responded with:', error.response.data);
-      } else if (error.request) {
-        console.error('Request was made but no response was received:', error.request);
-      } else {
-        console.error('Error setting up request:', error.message);
-      }
       alert('Error registering user. Please check the console for more details.');
     }
   };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false); // Close dialog
+    setOpenDialog(false);
   };
 
   return (
@@ -128,20 +102,20 @@ const Register = () => {
           <option value="Option 3">1 year (PHP 8500)</option>
         </select>
         <button type="submit">Register</button>
-
-        {/* Dialog for successful registration */}
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Registration Successful!</DialogTitle>
-          <DialogContent>
-            <p>Your registration was successful. An email has been sent.</p>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
       </form>
+
+      {/* Dialog for successful registration */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Registration Successful!</DialogTitle>
+        <DialogContent>
+          <p>Your registration was successful. An email has been sent.</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
