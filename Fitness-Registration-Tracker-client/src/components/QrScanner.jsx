@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import { QrReader } from 'react-qr-reader';
+import QrScanner from 'react-qr-scanner';
 import { db } from '../firebaseConfig';
 import { collection, addDoc, query, where, getDocs, updateDoc, Timestamp } from 'firebase/firestore';
 import debounce from 'lodash/debounce';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, CircularProgress, Box, useMediaQuery, useTheme } from '@mui/material';
 import './QrScanner.css'; // Import CSS file
 
-const QrScanner = () => {
+const QrScannerComponent = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -61,12 +61,9 @@ const QrScanner = () => {
 
   const debouncedProcessScan = useCallback(debounce(processScan, 2000), [lastScanned, isProcessingScan]);
 
-  const handleResult = (result, error) => {
+  const handleResult = (result) => {
     if (result) {
       debouncedProcessScan(result.text);
-    }
-    if (error) {
-      console.error("QR scanning issue:", error);
     }
   };
 
@@ -79,6 +76,11 @@ const QrScanner = () => {
     setIsCameraActive(true);
   };
 
+  const previewStyle = {
+    height: 240,
+    width: isMobile ? '100%' : 320,
+  };
+
   return (
     <div className="qr-scanner-container">
       <Typography variant="h4" gutterBottom align="center">QR Code Scanner</Typography>
@@ -87,11 +89,11 @@ const QrScanner = () => {
       </Button>
       {isCameraActive && (
         <Box className="qr-reader-wrapper">
-          <QrReader
+          <QrScanner
             delay={100}
-            onResult={handleResult}
-            style={{ width: isMobile ? '100%' : '50%' }}
-            constraints={{ facingMode: 'environment' }}
+            onScan={handleResult}
+            style={previewStyle}
+            facingMode="environment"
           />
           {isProcessingScan && (
             <Box className="loading-overlay">
@@ -118,4 +120,4 @@ const QrScanner = () => {
   );
 };
 
-export default QrScanner;
+export default QrScannerComponent;
