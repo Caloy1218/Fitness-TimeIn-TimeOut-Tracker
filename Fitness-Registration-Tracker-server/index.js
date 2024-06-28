@@ -12,7 +12,15 @@ const port = 5000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+
+// CORS configuration
+const corsOptions = {
+  origin: 'https://fitness-time-in-time-out-tracker-server.vercel.app', // Replace with your frontend URL
+  methods: ['POST'],
+  allowedHeaders: ['Content-Type'],
+};
+
+app.use(cors(corsOptions));
 
 // Dummy endpoint for testing
 app.get('/', (req, res) => {
