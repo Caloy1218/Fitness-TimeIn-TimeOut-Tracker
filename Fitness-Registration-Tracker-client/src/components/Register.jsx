@@ -51,7 +51,7 @@ const Register = () => {
       console.log('Data added to Firestore.');
   
       console.log('Sending registration data to server...');
-      await axios.post('http://localhost:5000/register', {
+      const response = await axios.post('https://fitness-time-in-time-out-tracker-client.vercel.app/register', {
         fullName,
         email,
         address,
@@ -60,7 +60,7 @@ const Register = () => {
         membershipPrice,
       });
   
-      console.log('Registration request sent.');
+      console.log('Registration request sent. Response:', response.data);
   
       setOpenDialog(true); // Open dialog on successful registration
   
@@ -73,7 +73,11 @@ const Register = () => {
       setMembershipPrice(0);
     } catch (error) {
       console.error('Error registering user:', error);
-      alert('Error registering user.');
+      // Check if error response is from your server and log it
+      if (error.response) {
+        console.error('Server responded with:', error.response.data);
+      }
+      alert('Error registering user. Please check the console for more details.');
     }
   };
 
