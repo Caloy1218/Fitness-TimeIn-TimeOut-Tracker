@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
@@ -51,17 +50,30 @@ const Register = () => {
       console.log('Data added to Firestore.');
   
       console.log('Sending registration data to server...');
-      const response = await axios.post('https://fitness-time-in-time-out-tracker-server.vercel.app/register', {
-        fullName,
-        email,
-        address,
-        phoneNumber,
-        membershipOption,
-        membershipPrice,
+
+      const response = await fetch('https://fitness-time-in-time-out-tracker-server.vercel.app/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName,
+          email,
+          address,
+          phoneNumber,
+          membershipOption,
+          membershipPrice,
+        }),
       });
-  
-      console.log('Registration request sent. Response:', response.data);
-  
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+
+      console.log('Registration request sent. Response:', responseData);
+
       setOpenDialog(true); // Open dialog on successful registration
   
       // Clear form inputs after submission
@@ -73,10 +85,6 @@ const Register = () => {
       setMembershipPrice(0);
     } catch (error) {
       console.error('Error registering user:', error);
-      // Check if error response is from your server and log it
-      if (error.response) {
-        console.error('Server responded with:', error.response.data);
-      }
       alert('Error registering user. Please check the console for more details.');
     }
   };
