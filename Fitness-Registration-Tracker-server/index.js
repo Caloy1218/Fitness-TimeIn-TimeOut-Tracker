@@ -5,22 +5,14 @@ const QRCode = require('qrcode');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
 const port = 5000;
 
 // Middleware
 app.use(bodyParser.json());
-
-// CORS configuration
-const corsOptions = {
-  origin: 'http://localhost:3000', // Allow requests from localhost:3000
-  methods: ['GET', 'POST'], // Allow GET and POST requests
-  allowedHeaders: ['Content-Type'], // Allow Content-Type header
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 // Dummy endpoint for testing
 app.get('/', (req, res) => {
@@ -28,8 +20,6 @@ app.get('/', (req, res) => {
 });
 
 // Endpoint for registration
-app.options('/register', cors(corsOptions)); // Handle OPTIONS request for /register
-
 app.post('/register', async (req, res) => {
   const { fullName, email, address, phoneNumber, membershipOption, membershipPrice } = req.body;
 
@@ -44,8 +34,8 @@ app.post('/register', async (req, res) => {
     service: 'gmail',
     auth: {
       user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
-    },
+      pass: process.env.GMAIL_PASS
+    }
   });
 
   const mailOptions = {
@@ -61,9 +51,9 @@ app.post('/register', async (req, res) => {
       {
         filename: 'qrcode.png',
         path: qrCodePath,
-        cid: 'qrcode',
-      },
-    ],
+        cid: 'qrcode' // Use a unique ID for the image
+      }
+    ]
   };
 
   try {
