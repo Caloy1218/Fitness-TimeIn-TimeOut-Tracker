@@ -51,7 +51,7 @@ const Register = () => {
       console.log('Data added to Firestore.');
   
       console.log('Sending registration data to server...');
-      const response = await axios.post('http://localhost:5000/register', {
+      const response = await axios.post('https://fitness-time-in-time-out-tracker-server.vercel.app/register', {
         fullName,
         email,
         address,
@@ -76,6 +76,10 @@ const Register = () => {
       // Check if error response is from your server and log it
       if (error.response) {
         console.error('Server responded with:', error.response.data);
+      } else if (error.request) {
+        console.error('Request was made but no response was received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
       }
       alert('Error registering user. Please check the console for more details.');
     }
