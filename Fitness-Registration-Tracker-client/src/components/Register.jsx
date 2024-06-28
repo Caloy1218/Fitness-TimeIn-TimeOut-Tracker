@@ -46,9 +46,9 @@ const Register = () => {
         membershipOption,
         membershipPrice,
       });
-  
+
       console.log('Data added to Firestore.');
-  
+
       console.log('Sending registration data to server...');
 
       const response = await fetch('https://fitness-time-in-time-out-tracker-server.vercel.app/register', {
@@ -75,7 +75,7 @@ const Register = () => {
       console.log('Registration request sent. Response:', responseData);
 
       setOpenDialog(true); // Open dialog on successful registration
-  
+
       // Clear form inputs after submission
       setFullName('');
       setEmail('');
