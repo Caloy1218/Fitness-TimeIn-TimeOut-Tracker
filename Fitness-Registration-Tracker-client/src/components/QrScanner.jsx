@@ -3,7 +3,8 @@ import QrScanner from 'react-qr-scanner';
 import { db } from '../firebaseConfig';
 import { collection, addDoc, query, where, getDocs, updateDoc, Timestamp } from 'firebase/firestore';
 import debounce from 'lodash/debounce';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, CircularProgress, Box, useMediaQuery, useTheme } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box, useMediaQuery, useTheme } from '@mui/material';
+import FlipCameraIosIcon from '@mui/icons-material/FlipCameraIos';
 import './QrScanner.css'; // Import CSS file
 
 const QrScannerComponent = () => {
@@ -16,6 +17,8 @@ const QrScannerComponent = () => {
   const [lastScanned, setLastScanned] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
+  const [facingMode, setFacingMode] = useState('environment');
+  const [borderColor, setBorderColor] = useState('red');
 
   const processScan = async (data) => {
     if (data && data !== lastScanned && !isProcessingScan) {
@@ -23,6 +26,7 @@ const QrScannerComponent = () => {
       setLastScanned(data);
       setResult(data);
       setIsCameraActive(false);
+      setBorderColor('green'); // Change border color to green when QR is read
 
       const [fullName, membershipOption] = data.split('-');
 
@@ -55,16 +59,22 @@ const QrScannerComponent = () => {
       setTimeout(() => {
         setIsProcessingScan(false);
         setLastScanned('');
-      }, 2000);
+        setBorderColor('red'); // Reset border color to red after processing
+      }, 500);
     }
   };
 
-  const debouncedProcessScan = useCallback(debounce(processScan, 2000), [lastScanned, isProcessingScan]);
+  const debouncedProcessScan = useCallback(debounce(processScan, 500), [lastScanned, isProcessingScan]);
 
   const handleResult = (result) => {
     if (result) {
       debouncedProcessScan(result.text);
     }
+  };
+
+  const handleError = (error) => {
+    console.error("QR Scanner Error:", error);
+    alert("An error occurred while scanning. Please try again.");
   };
 
   const handleDialogClose = () => {
@@ -76,9 +86,14 @@ const QrScannerComponent = () => {
     setIsCameraActive(true);
   };
 
+  const toggleCamera = () => {
+    setFacingMode(prevMode => (prevMode === 'environment' ? 'user' : 'environment'));
+  };
+
   const previewStyle = {
     height: 240,
     width: isMobile ? '100%' : 320,
+    border: `5px solid ${borderColor}`, // Add border style here
   };
 
   return (
@@ -92,13 +107,20 @@ const QrScannerComponent = () => {
           <QrScanner
             delay={100}
             onScan={handleResult}
+            onError={handleError}
             style={previewStyle}
-            facingMode="environment"
+            facingMode={facingMode}
           />
-          {isProcessingScan && (
-            <Box className="loading-overlay">
-              <CircularProgress size={50} />
-            </Box>
+          {isMobile && (
+            <Button 
+              variant="contained" 
+              color="secondary" 
+              onClick={toggleCamera} 
+              startIcon={<FlipCameraIosIcon />}
+              className="flip-camera-button"
+            >
+              Flip Camera
+            </Button>
           )}
         </Box>
       )}
