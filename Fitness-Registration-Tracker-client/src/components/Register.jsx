@@ -76,10 +76,6 @@ const Register = () => {
       // Check if error response is from your server and log it
       if (error.response) {
         console.error('Server responded with:', error.response.data);
-      } else if (error.request) {
-        console.error('Request was made but no response was received:', error.request);
-      } else {
-        console.error('Error setting up request:', error.message);
       }
       alert('Error registering user. Please check the console for more details.');
     }
