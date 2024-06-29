@@ -20,7 +20,7 @@ app.use(cors({
 
 // Dummy endpoint for testing
 app.get('/', (req, res) => {
-  res.send('Hello from the backend server!');
+  res.send('Hello from the backend server!!!!');
 });
 
 // Endpoint for registration
