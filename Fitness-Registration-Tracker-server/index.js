@@ -13,14 +13,14 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'https://fitness-time-in-time-out-tracker-client.vercel.app', // Replace with your frontend URL
+  origin: ['https://fitness-time-in-time-out-tracker-client.vercel.app', 'http://localhost:3000'], // Allow both production and development URLs
   methods: ['GET', 'POST'], // Allow specific methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
 }));
 
 // Dummy endpoint for testing
 app.get('/', (req, res) => {
-  res.send('Hello from the backend!');
+  res.send('Hello from the backend server!!!!');
 });
 
 // Endpoint for registration
