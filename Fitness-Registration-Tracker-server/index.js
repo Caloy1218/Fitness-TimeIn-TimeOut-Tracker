@@ -8,19 +8,15 @@ const path = require('path');
 require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
-const port = 5000; // Hardcoded port number
+const port = 5000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors({
-  origin: 'https://fitness-time-in-time-out-tracker-client.vercel.app', // Replace with your frontend URL
-  methods: ['GET', 'POST'], // Allow specific methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
-}));
+app.use(cors());
 
 // Dummy endpoint for testing
 app.get('/', (req, res) => {
-  res.send('Hello from the backend!!');
+  res.send('Hello from the backend!');
 });
 
 // Endpoint for registration
