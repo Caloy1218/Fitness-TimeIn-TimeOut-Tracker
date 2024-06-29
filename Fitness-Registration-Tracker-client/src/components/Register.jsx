@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
@@ -46,37 +47,23 @@ const Register = () => {
         membershipOption,
         membershipPrice,
       });
-
+  
       console.log('Data added to Firestore.');
-
+  
       console.log('Sending registration data to server...');
-
-      const response = await fetch('https://fitness-time-in-time-out-tracker-server.vercel.app/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fullName,
-          email,
-          address,
-          phoneNumber,
-          membershipOption,
-          membershipPrice,
-        }),
+      await axios.post('http://localhost:5000/register', {
+        fullName,
+        email,
+        address,
+        phoneNumber,
+        membershipOption,
+        membershipPrice,
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Network response was not ok: ${response.statusText} - ${errorText}`);
-      }
-
-      const responseData = await response.json();
-
-      console.log('Registration request sent. Response:', responseData);
-
+  
+      console.log('Registration request sent.');
+  
       setOpenDialog(true); // Open dialog on successful registration
-
+  
       // Clear form inputs after submission
       setFullName('');
       setEmail('');
@@ -86,7 +73,7 @@ const Register = () => {
       setMembershipPrice(0);
     } catch (error) {
       console.error('Error registering user:', error);
-      alert('Error registering user. Please check the console for more details.');
+      alert('Error registering user.');
     }
   };
 
