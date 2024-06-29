@@ -51,7 +51,7 @@ const Register = () => {
 
       console.log('Sending registration data to server...');
 
-      const response = await fetch('https://fitness-time-in-time-o-git-95e05b-john-carlos-projects-34978f9f.vercel.app/register', {
+      const response = await fetch('https://fitness-time-in-time-out-tracker-server.vercel.app/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +67,8 @@ const Register = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorText = await response.text();
+        throw new Error(`Network response was not ok: ${response.statusText} - ${errorText}`);
       }
 
       const responseData = await response.json();
