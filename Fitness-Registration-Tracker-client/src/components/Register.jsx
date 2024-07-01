@@ -47,11 +47,11 @@ const Register = () => {
         membershipOption,
         membershipPrice,
       });
-  
+
       console.log('Data added to Firestore.');
-  
+
       console.log('Sending registration data to server...');
-      await axios.post('http://localhost:5000/register', {
+      await axios.post(`${process.env.REACT_APP_SERVER}/register`, {
         fullName,
         email,
         address,
@@ -59,11 +59,11 @@ const Register = () => {
         membershipOption,
         membershipPrice,
       });
-  
+
       console.log('Registration request sent.');
-  
+
       setOpenDialog(true); // Open dialog on successful registration
-  
+
       // Clear form inputs after submission
       setFullName('');
       setEmail('');
