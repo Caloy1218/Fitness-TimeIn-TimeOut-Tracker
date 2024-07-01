@@ -51,7 +51,7 @@ const Register = () => {
       console.log('Data added to Firestore.');
 
       console.log('Sending registration data to server...');
-      await axios.post(`${process.env.REACT_APP_SERVER}/register`, {
+      await axios.post(`https://fitness-time-in-time-out-tracker-server.vercel.app/register`, {
         fullName,
         email,
         address,
