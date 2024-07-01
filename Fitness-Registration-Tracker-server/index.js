@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 
 // Dummy endpoint for testing
 app.get('/', (req, res) => {
-  res.send('Hello from the backend!');
+  res.send('Hello from the backend Server!');
 });
 
 // Endpoint for registration
