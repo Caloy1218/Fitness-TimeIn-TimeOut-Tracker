@@ -12,11 +12,15 @@ const port = 5000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+
+// CORS configuration
+app.use(cors({
+  origin: 'https://fitness-time-in-time-out-tracker-client.vercel.app' // Update this with your client domain
+}));
 
 // Dummy endpoint for testing
 app.get('/', (req, res) => {
-  res.send('Hello from the backend!');
+  res.send('Hello from the backend Server!');
 });
 
 // Endpoint for registration
