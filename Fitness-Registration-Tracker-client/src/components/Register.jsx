@@ -35,23 +35,22 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      console.log('Submitting registration...');
-      await addDoc(collection(db, 'members'), {
-        fullName,
-        email,
-        address,
-        phoneNumber,
-        membershipOption,
-        membershipPrice,
-      });
-
+    console.log('Submitting registration...');
+    addDoc(collection(db, 'members'), {
+      fullName,
+      email,
+      address,
+      phoneNumber,
+      membershipOption,
+      membershipPrice,
+    })
+    .then(() => {
       console.log('Data added to Firestore.');
 
       console.log('Sending registration data to server...');
-      await axios.post(`https://fitness-time-in-time-out-tracker-server.vercel.app/register`, {
+      return axios.post(`https://fitness-time-in-time-out-tracker-server.vercel.app/register`, {
         fullName,
         email,
         address,
@@ -59,7 +58,8 @@ const Register = () => {
         membershipOption,
         membershipPrice,
       });
-
+    })
+    .then(() => {
       console.log('Registration request sent.');
 
       setOpenDialog(true); // Open dialog on successful registration
@@ -71,10 +71,11 @@ const Register = () => {
       setPhoneNumber('');
       setMembershipOption('');
       setMembershipPrice(0);
-    } catch (error) {
+    })
+    .catch((error) => {
       console.error('Error registering user:', error);
       alert('Error registering user.');
-    }
+    });
   };
 
   const handleCloseDialog = () => {
